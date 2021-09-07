@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "esnext",
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "removeComments": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "noImplicitThis": true,
+    "moduleResolution": "node",
+    "baseUrl": "./src",
+    "paths": {
+      "$types": ["./types/"]
+    }, 
+    "types": [
+      "node"
+    ],
+    "esModuleInterop": true,
+    "preserveSymlinks": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "exclude": ["node_modules/", "test/", "**/types/"]
+}
