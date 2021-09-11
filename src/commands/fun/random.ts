@@ -1,7 +1,6 @@
-import type { __commands } from '$types';
+import type { Sakura } from '$types';
 
-const command: __commands = {
-    name: 'random',
+const command: Sakura.Command = {
     alias: ['rand'],
     description: 'Generate a random number!',
     usage: `\`\`\`{prefix}random [0 to 10]
@@ -25,7 +24,7 @@ const command: __commands = {
                 });
                 return;
             }
-            max = Math.abs(max_temp);
+            max = Math.floor(Math.abs(max_temp));
         } else if(len >= 2) {
             let min_temp: number = Number(args![0]);
             let max_temp: number = Number(args![1]);
@@ -46,8 +45,8 @@ const command: __commands = {
                 });
                 return;
             }
-            min = Math.abs(min_temp);
-            max = Math.abs(max_temp);
+            min = Math.floor(Math.abs(min_temp));
+            max = Math.floor(Math.abs(max_temp));
         }
         const result: number = random!(min!, max!);
         await msg!.reply({
@@ -57,6 +56,6 @@ const command: __commands = {
             }
         });
     }
-}
+};
 
 export default command;

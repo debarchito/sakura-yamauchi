@@ -1,59 +1,56 @@
-import type { Client, PermissionResolvable, Message, ColorResolvable, ClientEvents, Guild } from 'discord.js';
+import type { Client as DiscordClient, PermissionResolvable, ColorResolvable, Message, ClientEvents } from 'discord.js';
 import type Realm from 'realm';
 
-interface __Client extends Client { 
-    commands?: Collection<string, __commands>;
-}
+export namespace Sakura {
+    export interface Client extends DiscordClient {
+        commands?: Collection<string, Sakura.Command>;
+        categories?: Map<string, string>;
+        servers?: Map<string, Sakura.Server>
+    };
 
-interface __eventsLoader {
-    activity?: __activity;
-    client?: __Client;
-    servers?: Map<string, __servers>;
-    realm?: Realm;
-}
+    export interface Command {
+        name?: string;
+        alias?: string[];
+        description: string;
+        category?: string;
+        usage: string;
+        permissions?: Array<PermissionResolvable>;
+        execute({}: Sakura.Execute): Promise<void>;
+    };
 
-interface __event {
-    name: keyof ClientEvents;
-    method: keyof Client;
-    listen: ({}: __eventsLoader) => (...args: any) => Promise<void>;
-}
+    export interface Server {
+        id: string;
+        prefix: string;
+        color: ColorResolvable;
+    };
 
-interface __commands {
-    name: string;
-    alias?: string[];
-    description: string;
-    usage: string;
-    examples?: string[];
-    permissions?: PermissionResolvable;
-    execute({}: __execute): Promise<void>;
-}
+    export interface Execute {
+        msg?: Message;
+        client?: Sakura.Client;
+        cmd?: string;
+        args?: string[];
+        realm?: Realm;
+        random?(min: number, max: number): number;
+    };
+};
 
-interface __execute {
-    msg?: Message;
-    client?: __Client;
-    servers?: Map<string, __servers>;
-    cmd?: string;
-    args?: string[];
-    realm?: Realm;
-    random?: (min: number, max: number) => number;
-}
+export namespace Command {
+    export interface Handler {
+        client?: Sakura.Client;
+        msg?: Message;
+        realm?: Realm;
+    };
+};
 
-interface __servers { 
-    id: string;
-    prefix: string;
-    color: ColorResolvable;
-}
+export namespace Event {
+    export interface Init {
+        name?: keyof ClientEvents;
+        method?: keyof DiscordClient;
+        listen({}: Event.Loader): (...args: any) => Promise<void>;
+    };
 
-interface __activity extends Array<{
-    id: number; name: string; value: string;
-}>{}
-
-export {
-    __Client,
-    __servers,
-    __commands,
-    __event,
-    __execute,
-    __activity,
-    __eventsLoader
-}
+    export interface Loader {
+        client?: Discord.Client;
+        realm?: Realm;
+    };
+};

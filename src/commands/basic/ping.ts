@@ -1,14 +1,13 @@
-import type { __commands } from "$types";
+import type { Sakura } from '$types';
 import type { ColorResolvable } from 'discord.js';
 
-const command: __commands = {
-    name: 'ping',
+const command: Sakura.Command = {
     description: 'Gets the latency!',
     usage: `\`\`\`{prefix}ping\`\`\``,
-    async execute({ msg, servers, client }) {
+    async execute({ msg, client }) {
         await msg!.channel.send({
             embeds: [{
-                color: servers!.get(msg!.guild!.id)!.color as ColorResolvable,
+                color: client!.servers!.get(msg!.guild!.id)!.color as ColorResolvable,
                 author: {
                     name: msg!.author.username,
                     icon_url: msg!.author.displayAvatarURL()
@@ -19,11 +18,12 @@ const command: __commands = {
                    { name: 'API Latency', value: `${Math.round(client!.ws.ping)}ms`, inline: true }
                 ],
                 footer: {
-                    text: `Sakura Yamauchi (c) Debarchito`,
+                    text: `${client!.user!.username} (c) Debarchito`,
+                    icon_url: client!.user!.displayAvatarURL()
                 }
             }]
         });
     }
-}
+};
 
 export default command;

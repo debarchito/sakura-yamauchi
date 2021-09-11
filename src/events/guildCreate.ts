@@ -1,22 +1,20 @@
-import { __event, __servers } from '$types';
+import type { Sakura, Event } from '$types';
 import type { Guild } from 'discord.js';
 
-const event: __event = {
-    method: 'on',
-    name: 'guildCreate',
-    listen({ realm, servers }) {
+const event: Event.Init = {
+    listen({ realm, client }) {
         return async function(guild: Guild) {
             realm!.write(() => {
-                const guildCreate = realm!.create<__servers>('guildCreate', {
+                const guildCreate = realm!.create<Sakura.Server>('guildCreate', {
                     id: guild!.id,
                     color: '#FCA9F3',
                     prefix: 's!'
                 });
-                servers!.set(guild!.id, guildCreate);
+                client!.servers!.set(guild!.id, guildCreate);
                 console.log(`[?] (GuildCreate) Registered new server with id "${guild!.id}"!`);
             });
-        }
+        };
     }
-}
+};
 
 export default event;

@@ -5,14 +5,14 @@ const guildCreate: Realm.ObjectSchema = {
     properties: {
         id: { type: 'string', indexed: true },
         color: 'string',
-        prefix: 'string'
-    }
-}
+        prefix: 'string',
+    },
+};
 
 const realm: Realm = await Realm.open({
     schema: [
         guildCreate
-    ]
+    ],
 });
 
 export default realm;

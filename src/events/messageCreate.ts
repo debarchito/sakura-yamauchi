@@ -1,33 +1,31 @@
 import { commandHandler } from '../handlers/commandHandler.js';
 
-import type { __event, __servers } from '$types';
+import type { Sakura, Event } from '$types';
 import type { Message } from 'discord.js';
 
-const event: __event = {
-    method: 'on',
-    name: 'messageCreate',
-    listen({ servers, realm, client }) {
+const event: Event.Init = {
+    listen({ client, realm }) {
         return async function(msg: Message) {
             const id = msg!.guild!.id;
-            if(!servers!.has(id)) {
-                const search = realm!.objects<__servers>('guildCreate').filtered(`id == "${id}"`);
+            if(!client!.servers!.has(id)) {
+                const search = realm!.objects<Sakura.Server>('guildCreate').filtered(`id == "${id}"`);
                 if(!search.length) {
                     realm!.write(() => {
-                        const guildCreate = realm!.create<__servers>('guildCreate', {
+                        const guildCreate = realm!.create<Sakura.Server>('guildCreate', {
                             id: id,
                             color: '#FCA9F3',
                             prefix: 's!'
                         });
-                        servers!.set(id, guildCreate);
+                        client!.servers!.set(id, guildCreate);
                         console.log(`[?] (MessageCreate) Registered new server with id "${id}"!`);
                     });
                 } else {
-                    servers!.set(id, search[0]);
+                    client!.servers!.set(id, search[0]);
                 };
-            }
-            await commandHandler({ msg, servers, realm, client });
-        }
+            };
+            await commandHandler({ client, realm, msg });
+        };
     }
-}
+};
 
 export default event;

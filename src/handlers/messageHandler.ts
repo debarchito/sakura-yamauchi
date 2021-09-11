@@ -1,42 +1,47 @@
-import { ColorResolvable } from 'discord.js';
+import { ColorResolvable, MessageEmbedOptions, PermissionResolvable } from 'discord.js';
 import { random } from './share/index.js';
 
-import type { __Client, __servers, __commands } from '$types';
+import type { Sakura } from '$types';
 import type { Message } from 'discord.js';
 import type Realm from 'realm';
 
-/*! Interfaces */
-
 interface MessageHandler {
     msg?: Message;
-    client?: __Client;
-    servers?: Map<string, __servers>;
+    client?: Sakura.Client;
     cmd?: string;
     args?: string[];
     realm?: Realm;
 }
 
-/*! Functions */
-
 export default async function messageHandler({
-    msg, client, servers, cmd, args, realm
+    msg, client, cmd, args, realm
 }: MessageHandler) {
     if(cmd === 'help') {
         if(!args!.length) {
+            let help: MessageEmbedOptions = {
+                title: 'Sakura Yamauchi | Help Utility',
+                color: client!.servers!.get(msg!.guild!.id)!.color as ColorResolvable,
+                fields: [],
+                footer: {
+                    text: `${client!.user!.username} (c) Debarchito`,
+                    icon_url: client!.user!.displayAvatarURL()
+                }
+            };
+            for(const [cat, cmd] of client!.categories!) {
+                help.fields!.push({
+                    name: `Category: ${cat}`,
+                    value: cmd
+                });
+            };
             await msg!.reply({
-                embeds: [
-                    {
-                        title: 'Sakura Yamauchi | Help Utility',
-                        color: servers!.get(msg!.guild!.id)!.color as ColorResolvable
-                    }
-                ],
+                embeds: [help],
                 allowedMentions: {
                     repliedUser: false
                 }
             });
             return;
         }
-        const command: __commands | undefined = client!.commands!.get(args![0]) || client!.commands!.find((cm: __commands) => !!cm.alias && cm.alias.includes(args![0]));
+        const command: Sakura.Command | undefined = client!.commands!.get(args![0]) || client!.commands!.find((cm: Sakura.Command) => !!cm.alias && cm.alias.includes(args![0]));
         if(!command) {
             await msg!.reply({
                 content: `The command "${args![0]}" doesn't exist.`,
@@ -55,24 +60,28 @@ export default async function messageHandler({
             });
             return;
         }
-        let fields = [];
+        let fields: {
+            name: string;
+            value: string;
+        }[] = [];
         if(command.alias) fields.push({
             name: 'Aliases',
             value: command.alias.map(item => `\`${item}\``).join(', ')
         });
-        fields.push({
-            name: 'Description',
-            value: command.description
-        },
-        {
-            name: 'Usage',
-            value: command.usage
-            .replace(/\{(prefix|color)\}/gm, (_: string, a: string): string => {
-                if(a === 'prefix') return servers!.get(msg!.guild!.id)!.prefix;
-                else if(a === 'color') return servers!.get(msg!.guild!.id)!.color.toString();
-                else return '';
-            })
-        });
+        fields.push(
+            {
+                name: 'Description',
+                value: command.description
+            },
+            {
+                name: 'Usage',
+                value: command.usage.replace(/\{(prefix|color)\}/gm, (_: string, a: string): string => {
+                        if(a === 'prefix') return client!.servers!.get(msg!.guild!.id)!.prefix;
+                        else if(a === 'color') return client!.servers!.get(msg!.guild!.id)!.color.toString();
+                        else return '';
+                    })
+            }
+        );
         await msg!.channel.send({
             embeds: [
                 {
@@ -81,7 +90,7 @@ export default async function messageHandler({
                         icon_url: msg!.author.displayAvatarURL()
                     },
                     title: `Documentation for "${command.name}"`,
-                    color: servers!.get(msg!.guild!.id)!.color as ColorResolvable,
+                    color: client!.servers!.get(msg!.guild!.id)!.color as ColorResolvable,
                     fields: fields,
                     footer: {
                         text: `${client!.user!.username} (c) Debarchito`
@@ -95,7 +104,7 @@ export default async function messageHandler({
         return;
     }
     const id = msg!.guild!.id,
-    command: __commands | undefined = client!.commands!.get(cmd) || client!.commands!.find((cm: __commands) => !!cm.alias && cm.alias.includes(cmd!));
+    command: Sakura.Command | undefined = client!.commands!.get(cmd) || client!.commands!.find((cm: Sakura.Command) => !!cm.alias && cm.alias.includes(cmd!));
     if(!command) return;
     if(process.env.MAINTENANCE) {
         if(!JSON.parse(process.env.MAINTAINER_CLIENT_IDS!).includes(msg!.author.id)) {
@@ -109,14 +118,20 @@ export default async function messageHandler({
         }
     } 
     if(command.permissions) {
-        /*
-        TODO
-        */
+        if(!msg!.member!.permissions.has(command.permissions as PermissionResolvable)) {
+            await msg!.reply({
+                content: `Sorry but you don\'t have the required permissions to use that. The required permissions are: ${command.permissions.map((perm: PermissionResolvable): string => `\`${perm}\``)}. Use the \`${client!.servers!.get(msg!.guild!.id)!.prefix}perms\` command to get the list of permissions you currently have.`,
+                allowedMentions: {
+                    repliedUser: false
+                }
+            });
+            return;
+        }
     }
     try {
         let cname = command.name;
         await client!.commands!.get(cname).execute({
-            msg, client, servers, cmd, args, realm, random
+            msg, client, cmd, args, realm, random
         });
     } catch(e) {
         console.error(e);

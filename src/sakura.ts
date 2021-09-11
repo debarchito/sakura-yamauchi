@@ -1,18 +1,17 @@
 import * as dotenv from 'dotenv';
 import { resolve } from 'path';
 import { Client, Intents, Collection } from 'discord.js';
-import { commandsLoader } from './handlers/commandHandler.js';
-import eventsLoader from './handlers/eventsLoader.js';
-import activity from './dialogues/activity.js';
+import { commandLoader } from './handlers/commandHandler.js';
+import eventLoader from './handlers/eventLoader.js';
 import realm from './realm/realm.js';
 
-import type { __Client, __commands, __servers } from '$types';
+import type { Sakura } from '$types';
 
 dotenv.config({
     path: resolve(resolve(), '../.env')
 });
 
-const client: __Client = new Client({
+const client: Sakura.Client = new Client({
     intents: [
         Intents.FLAGS.GUILDS,
         Intents.FLAGS.GUILD_MEMBERS,
@@ -20,14 +19,13 @@ const client: __Client = new Client({
     ]
 });
 
-client.commands = new Collection<string, __commands>();
-const servers = new Map<string, __servers>();
+client.commands = new Collection<string, Sakura.Command>();
+client.categories = new Map<string, string>();
+client.servers = new Map<string, Sakura.Server>();
 
-await commandsLoader(client);
-await eventsLoader({ 
+await commandLoader(client);
+await eventLoader({ 
     client,
-    activity,
-    servers,
     realm
 });
 
