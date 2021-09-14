@@ -14,10 +14,8 @@
     "baseUrl": "./src",
     "paths": {
       "$types": ["./types/"]
-    }, 
-    "types": [
-      "node"
-    ],
+    },
+    "types": ["node"],
     "esModuleInterop": true,
     "preserveSymlinks": true,
     "experimentalDecorators": true,
@@ -25,5 +23,5 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true
   },
-  "exclude": ["node_modules/", "test/", "**/types/"]
+  "exclude": ["node_modules/", "test/", "**/types/", "**/*.test.ts"]
 }

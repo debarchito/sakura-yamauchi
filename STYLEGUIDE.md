@@ -3,7 +3,8 @@
 A guide to preserve the style and readability of the code. This guide may be updated in the future. Not like it's perfect. Thoughts and contributions to this guide are always welcomed.
 
 ##### Requirements
-- Node.js v16.6+ or latest 
+
+- Node.js v16.6+ or latest
 - pnpm v6+ or latest
 
 ##### NOTE: None of the options mentioned below are mandatory if you don't plan to contribute to the project.
