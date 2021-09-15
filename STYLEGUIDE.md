@@ -14,7 +14,7 @@ A guide to preserve the style and readability of the code. This guide may be upd
 - Use `async/await` instead of `Promise` constructors whenever possible.
 - Use high-level `await` without wrapping it inside an async IIFE.
 - Avoid `sync` I/O whenever possible.
-- Use strict types with no or less implicitness.
+- Use strict types with no or less implicitness (Applies to variables only if the resultant type can't be refered just by looking)
 - Types should be defined within their respective namespaces.
 - Use of semi-colons is highly advised.
 - What to import first depends on what will be used/called first.

@@ -1,10 +1,8 @@
-type Activity = Array<{
+const activity: Array<{
   id: number;
   name: string;
   value: string;
-}>;
-
-const activity: Activity = [
+}> = [
   { id: 3, name: 'WATCHING', value: 'the world smile!' },
   { id: 3, name: 'WATCHING', value: 'the movie: I want to eat your pancreas!' },
   { id: 0, name: 'PLAYING', value: 'with Kyoko!' },

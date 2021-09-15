@@ -1,6 +1,6 @@
 import * as dotenv from 'dotenv';
 import { resolve } from 'path';
-import { Client, Intents, Collection } from 'discord.js';
+import { Client, Intents } from 'discord.js';
 import { commandLoader } from './handlers/commandHandler.js';
 import eventLoader from './handlers/eventLoader.js';
 import realm from './realm/realm.js';
@@ -15,7 +15,7 @@ const client: Sakura.Client = new Client({
   intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MEMBERS, Intents.FLAGS.GUILD_MESSAGES]
 });
 
-client.commands = new Collection<string, Command.Init>();
+client.commands = new Map<string, Command.Init>();
 client.categories = new Map<string, string>();
 client.servers = new Map<string, Sakura.Server>();
 

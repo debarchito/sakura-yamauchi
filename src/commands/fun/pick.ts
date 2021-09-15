@@ -5,8 +5,8 @@ const command: Command.Init = {
   description: 'Picks an argument randomly from given arguments!',
   usage: `\`\`\`{prefix}pick <Arg 1>, <Arg 2>, <Arg 3>, ...\`\`\``,
   async execute({ args, client, msg }) {
-    const len: number = args!.length,
-      prefix: string = client!.servers!.get(msg!.guild!.id)!.prefix;
+    const len = args!.length,
+      prefix = client!.servers!.get(msg!.guild!.id)!.prefix;
     let message: string;
     if (len === 0)
       message = `Didn't receive any argument while expecting at least 2 arguments! Type "${prefix}help pick" to know more about it.`;

@@ -7,12 +7,6 @@ import type { Sakura, Command } from '$types';
 import type { Message } from 'discord.js';
 import type Realm from 'realm';
 
-interface CommandHandler {
-  msg?: Message;
-  client?: Sakura.Client;
-  realm?: Realm;
-}
-
 export async function commandLoader(client: Sakura.Client): Promise<void> {
   try {
     const commandsDir = await readdir('./commands');
@@ -43,7 +37,15 @@ export async function commandLoader(client: Sakura.Client): Promise<void> {
   }
 }
 
-export async function commandHandler({ msg, client, realm }: CommandHandler): Promise<void> {
+export async function commandHandler({
+  msg,
+  client,
+  realm
+}: {
+  msg?: Message;
+  client?: Sakura.Client;
+  realm?: Realm;
+}): Promise<void> {
   if (!msg!.author.bot) {
     const content = msg!.content.trim(),
       client_id =

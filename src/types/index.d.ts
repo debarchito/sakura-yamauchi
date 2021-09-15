@@ -41,12 +41,6 @@ export namespace Command {
     realm?: Realm;
     random?(min: number, max: number): number;
   }
-
-  export interface Handler {
-    client?: Sakura.Client;
-    msg?: Message;
-    realm?: Realm;
-  }
 }
 
 export namespace Event {
@@ -57,7 +51,7 @@ export namespace Event {
   }
 
   export interface Loader {
-    client?: Discord.Client;
+    client?: Sakura.Client;
     realm?: Realm;
   }
 }

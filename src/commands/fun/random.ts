@@ -6,8 +6,8 @@ const command: Command.Init = {
   usage: `\`\`\`{prefix}random [0 to 10]
 {prefix}random <Max> [0 to <Max>]
 {prefix}random <Min> <Max> [<Min> to <Max>]\`\`\``,
-  async execute({ args, random, msg }) {
-    const len: number = args!.length;
+  async execute({ args, msg, random }) {
+    const len = args!.length;
     let min: number, max: number;
     if (len === 0) {
       min = 0;

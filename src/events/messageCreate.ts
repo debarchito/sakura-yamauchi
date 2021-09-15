@@ -1,7 +1,7 @@
-import { commandHandler } from '../handlers/commandHandler.js';
 import xpHandler from '../handlers/xpHandler.js';
+import { commandHandler } from '../handlers/commandHandler.js';
 
-import type { Sakura, Event } from '$types';
+import type { Event, Sakura } from '$types';
 import type { Message } from 'discord.js';
 
 const event: Event.Init = {

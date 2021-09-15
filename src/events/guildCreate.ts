@@ -1,4 +1,4 @@
-import type { Sakura, Event } from '$types';
+import type { Event, Sakura } from '$types';
 import type { Guild } from 'discord.js';
 
 const event: Event.Init = {

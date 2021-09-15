@@ -1,4 +1,4 @@
-import { ColorResolvable, MessageEmbedOptions, PermissionResolvable } from 'discord.js';
+import { MessageEmbedOptions, ColorResolvable, PermissionResolvable } from 'discord.js';
 import { random } from './share/index.js';
 
 import type { Sakura, Command } from '$types';
