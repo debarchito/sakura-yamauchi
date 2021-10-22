@@ -34,12 +34,12 @@ export namespace Command {
   }
 
   export interface Execute {
-    msg?: Message;
-    client?: Sakura.Client;
-    cmd?: string;
-    args?: string[];
-    realm?: Realm;
-    random?(min: number, max: number): number;
+    msg: Message;
+    client: Sakura.Client;
+    cmd: string;
+    args: string[];
+    realm: Realm;
+    share: Share;
   }
 }
 
@@ -51,8 +51,9 @@ export namespace Event {
   }
 
   export interface Loader {
-    client?: Sakura.Client;
-    realm?: Realm;
+    client: Sakura.Client;
+    realm: Realm;
+    share: Share;
   }
 }
 
@@ -65,4 +66,9 @@ export namespace XP {
     requiredXp: number;
     totalXp: number;
   }
+}
+
+export interface Share {
+  random(min: number, max: number): number;
+  choose<T>(arr: T[]): T;
 }

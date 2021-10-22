@@ -1,6 +1,7 @@
 import { readdir } from 'fs/promises';
 import { resolve } from 'path';
 import { type as osType } from 'os';
+import share from './share/index.js';
 
 import type { Event } from '$types';
 
@@ -18,7 +19,8 @@ export default async function eventsLoader({ client, realm }: Event.Loader): Pro
         name,
         event.listen({
           client,
-          realm
+          realm,
+          share
         })
       );
     }

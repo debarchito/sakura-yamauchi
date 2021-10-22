@@ -4,14 +4,14 @@ import type { Event } from '$types';
 
 const event: Event.Init = {
   method: 'once',
-  listen({ client }) {
+  listen({ client, share: { random } }) {
     return async function () {
-      client!.user!.setActivity(activity![0].value, {
+      client.user!.setActivity(activity![0].value, {
         type: activity![0].id
       });
       setInterval((): void => {
-        const i = Math.floor(Math.random() * (activity.length - 1) + 1);
-        client!.user!.setActivity(activity[i].value, {
+        const i = random(0, activity.length - 1);
+        client.user!.setActivity(activity[i].value, {
           type: activity[i].id
         });
       }, 15000);

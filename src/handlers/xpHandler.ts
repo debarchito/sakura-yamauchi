@@ -1,5 +1,5 @@
 import realm from '../realm/realm.js';
-import { random } from './share/index.js';
+import share from './share/index.js';
 
 import type { Message } from 'discord.js';
 import type { XP } from '$types';
@@ -11,15 +11,15 @@ const xpCooldowns: {
 } = {};
 
 export default async function xpHandler(msg: Message): Promise<void> {
-  const uid: string = msg.author.id,
-    gid: string = msg.guild!.id;
+  const uid = msg.author.id,
+    gid = msg.guild!.id;
   if (!xpCooldowns[gid]) xpCooldowns[gid] = {};
   if (!xpCooldowns[gid][uid]) xpCooldowns[gid][uid] = Date.now();
   if (Date.now() >= xpCooldowns[gid][uid]) {
     const search = realm.objects<XP.Init>('xp').filtered(`guildId == "${gid}" && id == "${uid}"`);
     if (search.length) {
       const user = search[0],
-        xpGain = random(15, 25);
+        xpGain = share.random(15, 25);
       realm.write(async () => {
         if (user.xp + xpGain >= user.requiredXp) {
           user.xp = user.xp + xpGain - user.requiredXp;
@@ -42,7 +42,7 @@ export default async function xpHandler(msg: Message): Promise<void> {
         xpCooldowns[gid][uid] = Date.now() + 60_000;
       });
     } else {
-      const xpGain = random(15, 25);
+      const xpGain = share.random(15, 25);
       realm.write(() => {
         realm.create<XP.Init>('xp', {
           id: msg.author.id,

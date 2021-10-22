@@ -37,22 +37,22 @@ export async function commandLoader(client: Sakura.Client): Promise<void> {
   }
 }
 
-export async function commandHandler({
-  msg,
-  client,
-  realm
+export async function commandHandler({ 
+  msg, 
+  client, 
+  realm 
 }: {
-  msg?: Message;
-  client?: Sakura.Client;
-  realm?: Realm;
+  msg: Message;
+  client: Sakura.Client;
+  realm: Realm;
 }): Promise<void> {
-  if (!msg!.author.bot) {
-    const content = msg!.content.trim(),
+  if (!msg.author.bot) {
+    const content = msg.content.trim(),
       client_id =
         process.env.RUNTIME === 'prod' ? process.env.CLIENT_ID : process.env.TEST_CLIENT_ID;
-    if (content.toLowerCase().startsWith(client!.servers!.get(msg!.guild!.id)!.prefix)) {
+    if (content.toLowerCase().startsWith(client.servers!.get(msg.guild!.id)!.prefix)) {
       const [cmd, ...args] = content
-        .slice(client!.servers!.get(msg!.guild!.id)!.prefix.length)
+        .slice(client.servers!.get(msg.guild!.id)!.prefix.length)
         .trim()
         .split(/ +/);
       await messageHandler({

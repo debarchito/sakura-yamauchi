@@ -8,12 +8,12 @@ dotenv.config({
   path: resolve(resolve(), '../.env')
 });
 
-const manager: ShardingManager = new ShardingManager('./sakura.js', {
+const manager = new ShardingManager('./sakura.js', {
   token: process.env.RUNTIME === 'prod' ? process.env.TOKEN : process.env.TEST_TOKEN
 });
 
 manager.on('shardCreate', (shard: Shard): void =>
-  console.log(`[?] (ShardingManager) Launched shard no. ${Number(shard.id) + 1}!`)
+  console.log(`[?] (ShardingManager) Launched shard no. ${+shard.id + 1}!`)
 );
 
 manager.spawn();
