@@ -1,27 +1,19 @@
-import type { Command } from '$types';
+import type { Command } from "$types";
 
 const command: Command.Init = {
-  categoryEmoji: ':postal_horn:',
-  alias: ['rand'],
-  description: 'Generate a random number!',
+  alias: ["rand"],
+  description: "Generates a random number between two given limits.",
   usage: `\`\`\`{prefix}random [0 to 10]
 {prefix}random <Max> [0 to <Max>]
 {prefix}random <Min> <Max> [<Min> to <Max>]\`\`\``,
   async execute({ args, msg, share: { random } }) {
     const len = args.length;
-    let min: number, max: number;
-    if (len === 0) {
-      min = 0;
-      max = 10;
-    } else if (len === 1) {
-      min = 0;
+    let min = 0, max = 10;
+    if (len === 1) {
       const max_temp = +args[0];
       if (isNaN(max_temp)) {
         await msg.reply({
           content: `The first argument "${args[0]}" is not a number.`,
-          allowedMentions: {
-            repliedUser: false
-          }
         });
         return;
       }

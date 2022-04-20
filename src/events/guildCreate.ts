@@ -1,16 +1,18 @@
-import type { Event, Sakura } from '$types';
-import type { Guild } from 'discord.js';
+import type { Event, Sakura } from "$types";
+import type { Guild, ColorResolvable } from "discord.js";
 
 const event: Event.Init = {
   listen({ realm, client }) {
     return async function (guild: Guild) {
       realm.write(() => {
-        const guildCreate = realm.create<Sakura.Server>('guildCreate', {
+        const server = realm.create<Sakura.Server>("guild", {
           id: guild.id,
-          color: '#FCA9F3',
-          prefix: 's!'
+          color: process.env.COLOR! as ColorResolvable,
+          prefix: process.env.PREFIX!
         });
-        client.servers!.set(guild.id, guildCreate);
+
+        client.servers!.set(guild.id, server);
+
         console.log(`[?] (GuildCreate) Registered new server with id "${guild.id}"!`);
       });
     };

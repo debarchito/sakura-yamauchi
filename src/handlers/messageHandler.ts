@@ -1,9 +1,9 @@
-import { MessageEmbedOptions, ColorResolvable, PermissionResolvable } from 'discord.js';
-import share from './share/index.js';
+import { MessageEmbedOptions, PermissionResolvable } from "discord.js";
+import share from "./share/share.js";
 
-import type { Sakura, Command } from '$types';
-import type { Message } from 'discord.js';
-import type Realm from 'realm';
+import type { Sakura, Command } from "$types";
+import type { Message } from "discord.js";
+import type Realm from "realm";
 
 export default async function messageHandler({
   msg,
@@ -18,81 +18,83 @@ export default async function messageHandler({
   args: string[];
   realm: Realm;
 }): Promise<void> {
-  if (cmd === 'help') {
+  if (cmd === "help") {
     if (!args.length) {
-      const help: MessageEmbedOptions = {
+      const embed: MessageEmbedOptions = {
         author: {
-          name: `${client.user!.username} | Help Utility`,
+          name: `Help Utility`,
           icon_url: client.user!.displayAvatarURL()
         },
-        description: `I say, "Right now, I, as formed as such, am living in this moment, I am living through our choices, right now, right here, you, and me as well, are living."`,
-        color: client.servers!.get(msg.guild!.id)!.color as ColorResolvable,
+        description: `"Right now, I, as formed as such, am living in this moment, I am living through our choices, right now, right here, you, and me as well, are living."`,
+        color: share.color(msg, client),
         fields: [],
         thumbnail: {
           url: client.user!.displayAvatarURL()
         },
         footer: {
-          text: `To view the documentation of a command, type ${client.servers!.get(msg.guild!.id)!.prefix}help <command | alias>`
+          text: `To view the documentation of a command, type "${share.prefix(msg, client)}help <command | alias>"`
         }
       };
-      for (const [cat, cmd] of client.categories!) {
-        help.fields!.push({
-          name: cat,
-          value: cmd
+
+      for (const [category, command] of client.categories!) {
+        embed.fields!.push({
+          name: category,
+          value: command
         });
       }
-      await msg.channel.send({
-        embeds: [help],
-        allowedMentions: {
-          repliedUser: false
-        }
+
+      await msg.reply({
+        embeds: [embed]
       });
       return;
     }
+
     const command: Command.Init | undefined =
       client.commands!.get(args[0]) ||
-      client.commands!.find((cm: Command.Init) => !!cm.alias && cm.alias.includes(args[0]));
+      client.commands!.find((command: Command.Init) => !!command.alias && command.alias.includes(args[0]));
+
     if (!command) {
       await msg.reply({
-        content: `The command "${args[0]}" doesn't exist.`,
-        allowedMentions: {
-          repliedUser: false
-        }
+        content: `The command \`${args[0]}\` doesn't exist.`
       });
       return;
     }
+
     const fields: {
       name: string;
       value: string;
     }[] = [];
+
     if (command.alias)
       fields.push({
-        name: 'Aliases',
-        value: command.alias.map(item => `\`${item}\``).join(', ')
+        name: "Alias(es)",
+        value: command.alias.map(item => `\`${item}\``).join(", ")
       });
+
     fields.push(
       {
-        name: 'Description',
+        name: "Description",
         value: command.description
       },
       {
-        name: 'Usage',
+        name: "Usage",
         value: command.usage.replace(/\{(prefix|color)\}/gm, (_: string, a: string): string => {
-          if (a === 'prefix') return client.servers!.get(msg.guild!.id)!.prefix;
-          else if (a === 'color') return client.servers!.get(msg.guild!.id)!.color.toString();
-          else return '';
+          if (a === "prefix") return share.prefix(msg, client);
+          else if (a === "color") return share.color(msg, client) as string;
+          else return "";
         })
       }
     );
-    await msg.channel.send({
+
+    await msg.reply({
       embeds: [
         {
           author: {
-            name: `${client!.user!.username} | Help Utility`,
+            name: `Help Utility`,
             icon_url: client!.user!.displayAvatarURL()
           },
           title: `Documentation for "${command.name}"`,
-          color: client!.servers!.get(msg!.guild!.id)!.color as ColorResolvable,
+          color: share.color(msg, client),
           fields: fields,
           thumbnail: {
             url: client!.user!.displayAvatarURL()
@@ -102,46 +104,39 @@ export default async function messageHandler({
             icon_url: msg!.author.displayAvatarURL()
           }
         }
-      ],
-      allowedMentions: {
-        repliedUser: false
-      }
+      ]
     });
     return;
   }
+
   const command: Command.Init | undefined =
-    client.commands!.get(cmd) ||
-    client.commands!.find((cm: Command.Init) => !!cm.alias && cm.alias.includes(cmd!));
+    client.commands!.get(cmd) || client.commands!.find((cm: Command.Init) => !!cm.alias && cm.alias.includes(cmd!));
+
   if (!command) return;
-  if (process.env.MAINTENANCE !== 'off') {
+
+  if (process.env.MAINTENANCE !== "off") {
     if (!JSON.parse(process.env.MAINTAINER_CLIENT_IDS!).includes(msg.author.id)) {
       await msg.reply({
-        content: 'Sakura is under maintenance! Please try again later.',
-        allowedMentions: {
-          repliedUser: false
-        }
+        content: "Sakura is under maintenance! Please try again later."
       });
       return;
     }
   }
+
   if (command.permissions) {
     if (!msg.member!.permissions.has(command.permissions as PermissionResolvable)) {
       await msg.reply({
         content: `Sorry but you don't have the required permissions to use that. The required permissions are: ${command.permissions.map(
           (perm: PermissionResolvable): string => `\`${perm}\``
-        )}. Use the \`${
-          client.servers!.get(msg.guild!.id)!.prefix
-        }perms\` command to get the list of permissions you currently have.`,
-        allowedMentions: {
-          repliedUser: false
-        }
+        )}. Use the \`${share.prefix(msg, client)}perms\` command to get the list of permissions you currently have.`
       });
       return;
     }
   }
+
   try {
-    const cname = command.name;
-    await client.commands!.get(cname).execute({
+    const commandName = command.name!;
+    await client.commands!.get(commandName)!.execute({
       msg,
       client,
       cmd,
@@ -152,10 +147,7 @@ export default async function messageHandler({
   } catch (e) {
     console.error(e);
     await msg.reply({
-      content: 'Hmm...seems like an internal error! Please try again later.',
-      allowedMentions: {
-        repliedUser: false
-      }
+      content: "Hmm...seems like an internal error! Please try again later."
     });
   }
 }

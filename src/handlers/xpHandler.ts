@@ -1,8 +1,8 @@
-import realm from '../realm/realm.js';
-import share from './share/index.js';
+import realm from "../realm/realm.js";
+import share from "./share/share.js";
 
-import type { Message } from 'discord.js';
-import type { XP } from '$types';
+import type { Message } from "discord.js";
+import type { XP } from "$types";
 
 const xpCooldowns: {
   [guildID: string]: {
@@ -16,7 +16,7 @@ export default async function xpHandler(msg: Message): Promise<void> {
   if (!xpCooldowns[gid]) xpCooldowns[gid] = {};
   if (!xpCooldowns[gid][uid]) xpCooldowns[gid][uid] = Date.now();
   if (Date.now() >= xpCooldowns[gid][uid]) {
-    const search = realm.objects<XP.Init>('xp').filtered(`guildId == "${gid}" && id == "${uid}"`);
+    const search = realm.objects<XP.Init>("xp").filtered(`guildId == "${gid}" && id == "${uid}"`);
     if (search.length) {
       const user = search[0],
         xpGain = share.random(15, 25);
@@ -25,8 +25,7 @@ export default async function xpHandler(msg: Message): Promise<void> {
           user.xp = user.xp + xpGain - user.requiredXp;
           user.totalXp += xpGain;
           user.level++;
-          user.requiredXp =
-            (5 / 6) * user.level * (2 * user.level * user.level + 27 * user.level + 91);
+          user.requiredXp = (5 / 6) * user.level * (2 * user.level * user.level + 27 * user.level + 91);
           await msg.reply({
             content: `Congrats! You just reached Level ${user.level}! You need more ${
               user.requiredXp - user.xp
@@ -39,20 +38,20 @@ export default async function xpHandler(msg: Message): Promise<void> {
           user.xp += xpGain;
           user.totalXp += xpGain;
         }
-        xpCooldowns[gid][uid] = Date.now() + 60_000;
+        xpCooldowns[gid][uid] = Date.now() + 120_000;
       });
     } else {
       const xpGain = share.random(15, 25);
       realm.write(() => {
-        realm.create<XP.Init>('xp', {
+        realm.create<XP.Init>("xp", {
           id: msg.author.id,
           xp: xpGain,
           level: 0,
-          requiredXp: 100,
+          requiredXp: 50,
           totalXp: xpGain,
           guildId: msg.guild!.id
         });
-        xpCooldowns[gid][uid] = Date.now() + 60_000;
+        xpCooldowns[gid][uid] = Date.now() + 120_000;
       });
     }
   }

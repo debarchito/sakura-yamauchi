@@ -1,7 +1,10 @@
-.history/
-.vscode/
-dist/
+# Folders
+.swc/
+.vscode/**
 node_modules/
-test/
-**/*.i.ts
+dist/
+
+# Files
+DS_Store
+!.vscode/tasks.json
 .env

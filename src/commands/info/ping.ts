@@ -1,27 +1,27 @@
-import type { Command } from '$types';
-import type { ColorResolvable } from 'discord.js';
+import type { Command } from "$types";
 
 const command: Command.Init = {
-  description: 'Gets the latency!',
-  usage: '```{prefix}ping```',
-  async execute({ msg, client }) {
+  description: "Get the latency!",
+  usage: "```{prefix}ping```",
+  dm: true,
+  async execute({ msg, client, share: { color } }) {
     await msg.reply({
       embeds: [
         {
-          color: client.servers!.get(msg.guild!.id)!.color as ColorResolvable,
+          color: color(msg, client),
           author: {
             name: msg.author.username,
             icon_url: msg.author.displayAvatarURL()
           },
-          title: 'And thats a pong! :womans_hat:',
+          title: "And thats a pong! :womans_hat:",
           fields: [
             {
-              name: 'Latency',
+              name: "Latency",
               value: `${Date.now() - msg.createdTimestamp}ms`,
               inline: true
             },
             {
-              name: 'API Latency',
+              name: "API Latency",
               value: `${Math.round(client.ws.ping)}ms`,
               inline: true
             }
@@ -31,10 +31,7 @@ const command: Command.Init = {
             icon_url: client.user!.displayAvatarURL()
           }
         }
-      ],
-      allowedMentions: {
-        repliedUser: false
-      }
+      ]
     });
   }
 };

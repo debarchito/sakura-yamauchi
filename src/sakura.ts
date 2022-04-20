@@ -1,34 +1,37 @@
-import * as dotenv from 'dotenv';
-import { resolve } from 'path';
-import { Client, Intents, Collection } from 'discord.js';
-import { commandLoader } from './handlers/commandHandler.js';
-import eventLoader from './handlers/eventLoader.js';
-import realm from './realm/realm.js';
-import share from './handlers/share/index.js';
+import * as dotenv from "dotenv";
+import { resolve } from "node:path";
+import { Client, Intents, Collection } from "discord.js";
+import { commandLoader } from "./handlers/commandHandler.js";
+import eventLoader from "./handlers/eventHandler.js";
+import realm from "./realm/realm.js";
 
-import type { Sakura, Command } from '$types';
+import type { Sakura } from "$types";
 
 dotenv.config({
-  path: resolve(resolve(), '../.env')
+  path: resolve(resolve(), "../.env")
 });
 
 const client: Sakura.Client = new Client({
+  partials: ["CHANNEL"],
   intents: [
-    Intents.FLAGS.GUILDS, 
-    Intents.FLAGS.GUILD_MEMBERS, 
-    Intents.FLAGS.GUILD_MESSAGES
-  ]
+    Intents.FLAGS.GUILDS,
+    Intents.FLAGS.GUILD_MEMBERS,
+    Intents.FLAGS.GUILD_MESSAGES,
+    Intents.FLAGS.DIRECT_MESSAGES
+  ],
+  allowedMentions: {
+    repliedUser: false
+  }
 });
 
-client.commands = new Collection<string, Command.Init>();
-client.categories = new Map<string, string>();
-client.servers = new Map<string, Sakura.Server>();
+client.commands = new Collection();
+client.categories = new Map();
+client.servers = new Map();
 
 await commandLoader(client);
 await eventLoader({
   client,
-  realm,
-  share
+  realm
 });
 
-client.login(process.env.RUNTIME === 'prod' ? process.env.TOKEN : process.env.TEST_TOKEN);
+client.login(process.env.TOKEN);

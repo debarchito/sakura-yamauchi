@@ -1,28 +1,37 @@
-import Realm from 'realm';
+import Realm from "realm";
 
-const guildCreate: Realm.ObjectSchema = {
-  name: 'guildCreate',
+/**
+ * Guild registration schema
+ */
+const guild: Realm.ObjectSchema = {
+  name: "guild",
   properties: {
-    id: { type: 'string', indexed: true },
-    color: 'string',
-    prefix: 'string'
+    id: { type: "string", indexed: true },
+    color: "string",
+    prefix: "string"
   }
 };
 
+/**
+ * User experience schema
+ */
 const xp: Realm.ObjectSchema = {
-  name: 'xp',
+  name: "xp",
   properties: {
-    guildId: { type: 'string', indexed: true },
-    id: { type: 'string', indexed: true },
-    xp: 'int',
-    level: 'int',
-    requiredXp: 'int',
-    totalXp: 'int'
+    guildId: { type: "string", indexed: true },
+    id: { type: "string", indexed: true },
+    xp: "int",
+    level: "int",
+    requiredXp: "int",
+    totalXp: "int"
   }
 };
 
-const realm: Realm = await Realm.open({
-  schema: [guildCreate, xp]
+/**
+ * Main database instance
+ */
+const realm = await Realm.open({
+  schema: [guild, xp]
 });
 
 export default realm;

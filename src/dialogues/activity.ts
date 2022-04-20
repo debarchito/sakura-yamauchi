@@ -1,15 +1,35 @@
-const activity: Array<{
-  id: number;
-  name: string;
+/*
+
+ ? Reference Table:
+
+ +---------------+-------------+
+ | Activity Name | Activity ID |
+ +---------------+-------------+
+ | PLAYING       | 0           |
+ | STREAMING     | 1           |
+ | LISTENING     | 2           |
+ | WATCHING      | 3           |
+ | COMPETING     | 5           |
+ +---------------+-------------+
+
+*/
+
+interface Activity {
+  id: 0 | 1 | 2 | 3 | 5;
   value: string;
-}> = [
-  { id: 3, name: 'WATCHING', value: 'the world smile!' },
-  { id: 3, name: 'WATCHING', value: 'the movie: I want to eat your pancreas!' },
-  { id: 0, name: 'PLAYING', value: 'with Kyoko!' },
-  { id: 3, name: 'WATCHING', value: 'over Haruki!' },
-  { id: 2, name: 'LISTENING', value: 'Fuyu. Are you doing good?' },
-  { id: 2, name: 'LISTENING', value: 'bird chirping!' },
-  { id: 3, name: 'WATCHING', value: 'the cherry blossoms!' }
+}
+
+/**
+ * Array of activities
+ */
+const activity: Activity[] = [
+  { id: 3, value: "the world smile!" },
+  { id: 3, value: "the movie: I want to eat your pancreas!" },
+  { id: 0, value: "with Kyoko!" },
+  { id: 3, value: "over Haruki!" },
+  { id: 2, value: "Fuyu. Are you doing good?" },
+  { id: 2, value: "bird chirping!" },
+  { id: 3, value: "the cherry blossoms!" }
 ];
 
 export default activity;

@@ -1,0 +1,41 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "shell",
+      "label": "build",
+      "command": "pnpm build",
+      "problemMatcher": []
+    },
+    {
+      "type": "shell",
+      "label": "start",
+      "command": "pnpm start",
+      "problemMatcher": []
+    },
+    {
+      "type": "shell",
+      "label": "dev",
+      "command": "pnpm dev",
+      "problemMatcher": []
+    },
+    {
+      "type": "shell",
+      "label": "lint",
+      "command": "pnpm lint",
+      "problemMatcher": []
+    },
+    {
+      "type": "shell",
+      "label": "lint:fix",
+      "command": "pnpm lint:fix",
+      "problemMatcher": []
+    },
+    {
+      "type": "shell",
+      "label": "format",
+      "command": "pnpm format",
+      "problemMatcher": []
+    }
+  ]
+}
