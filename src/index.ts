@@ -10,5 +10,7 @@ const manager = new ShardingManager("./sakura.js", {
   token: process.env.TOKEN
 });
 
-manager.on("shardCreate", shard => console.log(`[?] (ShardingManager) Launched shard no. ${shard.id + 1}!`));
+manager.on("shardCreate", (shard) =>
+  console.log(`[?] (ShardingManager) Launched shard no. ${shard.id + 1}!`)
+);
 manager.spawn();

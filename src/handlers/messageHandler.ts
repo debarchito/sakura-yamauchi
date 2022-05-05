@@ -5,20 +5,21 @@ import type { Sakura, Command } from "$types";
 import type { Message } from "discord.js";
 import type Realm from "realm";
 
-export default async function messageHandler({
-  msg,
-  client,
-  cmd,
-  args,
-  realm
-}: {
+interface MessageHandler {
   msg: Message;
   client: Sakura.Client;
   cmd: string;
   args: string[];
   realm: Realm;
-}): Promise<void> {
+}
+
+/**
+ * @description Handles the names and arguments extracted from messages
+ */
+export default async function messageHandler({ msg, client, cmd, args, realm }: MessageHandler) {
+  // The special help command
   if (cmd === "help") {
+    // The default help message
     if (!args.length) {
       const embed: MessageEmbedOptions = {
         author: {
@@ -32,7 +33,10 @@ export default async function messageHandler({
           url: client.user!.displayAvatarURL()
         },
         footer: {
-          text: `To view the documentation of a command, type "${share.prefix(msg, client)}help <command | alias>"`
+          text: `To view the documentation of a command, type "${share.prefix(
+            msg,
+            client
+          )}help <command | alias>"`
         }
       };
 
@@ -49,9 +53,13 @@ export default async function messageHandler({
       return;
     }
 
+    // The dynamic help message (help with arguments)
+
     const command: Command.Init | undefined =
       client.commands!.get(args[0]) ||
-      client.commands!.find((command: Command.Init) => !!command.alias && command.alias.includes(args[0]));
+      client.commands!.find(
+        (command: Command.Init) => !!command.alias && command.alias.includes(args[0])
+      );
 
     if (!command) {
       await msg.reply({
@@ -65,11 +73,12 @@ export default async function messageHandler({
       value: string;
     }[] = [];
 
-    if (command.alias)
+    if (command.alias) {
       fields.push({
         name: "Alias(es)",
-        value: command.alias.map(item => `\`${item}\``).join(", ")
+        value: command.alias.map((item) => `\`${item}\``).join(", ")
       });
+    }
 
     fields.push(
       {
@@ -78,10 +87,16 @@ export default async function messageHandler({
       },
       {
         name: "Usage",
-        value: command.usage.replace(/\{(prefix|color)\}/gm, (_: string, a: string): string => {
-          if (a === "prefix") return share.prefix(msg, client);
-          else if (a === "color") return share.color(msg, client) as string;
-          else return "";
+        // replace {tags} with their values
+        value: command.usage.replace(/\{(prefix|color)\}/gm, (_: string, tag: string): string => {
+          if (tag === "prefix") {
+            return share.prefix(msg, client);
+          } else if (tag === "color") {
+            return share.color(msg, client) as string;
+          } else {
+            // End string must not include tags
+            return "";
+          }
         })
       }
     );
@@ -110,17 +125,27 @@ export default async function messageHandler({
   }
 
   const command: Command.Init | undefined =
-    client.commands!.get(cmd) || client.commands!.find((cm: Command.Init) => !!cm.alias && cm.alias.includes(cmd!));
+    client.commands!.get(cmd) ||
+    client.commands!.find((cm: Command.Init) => !!cm.alias && cm.alias.includes(cmd!));
 
-  if (!command) return;
+  if (!command) {
+    return;
+  }
 
   if (process.env.MAINTENANCE !== "off") {
     if (!JSON.parse(process.env.MAINTAINER_CLIENT_IDS!).includes(msg.author.id)) {
-      await msg.reply({
+      msg.reply({
         content: "Sakura is under maintenance! Please try again later."
       });
       return;
     }
+  }
+
+  if(typeof command.dm === "boolean" && !command.dm) {
+    msg.reply({
+      content: "This command is not available for DMs."
+    });
+    return;
   }
 
   if (command.permissions) {
@@ -128,7 +153,10 @@ export default async function messageHandler({
       await msg.reply({
         content: `Sorry but you don't have the required permissions to use that. The required permissions are: ${command.permissions.map(
           (perm: PermissionResolvable): string => `\`${perm}\``
-        )}. Use the \`${share.prefix(msg, client)}perms\` command to get the list of permissions you currently have.`
+        )}. Use the \`${share.prefix(
+          msg,
+          client
+        )}perms\` command to get the list of permissions you currently have.`
       });
       return;
     }
@@ -144,8 +172,8 @@ export default async function messageHandler({
       realm,
       share
     });
-  } catch (e) {
-    console.error(e);
+  } catch (error) {
+    console.error(error);
     await msg.reply({
       content: "Hmm...seems like an internal error! Please try again later."
     });

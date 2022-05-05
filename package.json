@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "build": "swc src/ -d dist/",
-    "build:watch": "pnpm build -- -w",
+    "build:watch": "pnpm watch \"swc src/ -d dist/\" src",
     "start": "cd dist && node index.js",
     "start:watch": "cd dist && nodemon -w ../dist index.js",
     "dev": "concurrently \"pnpm build:watch\" \"pnpm start:watch\"",
@@ -21,21 +21,20 @@
     "discord.js": "^13.6.0",
     "discord.js-minesweeper": "^1.1.0",
     "dotenv": "^10.0.0",
-    "realm": "^10.13.0"
+    "realm": "^10.16.0"
   },
   "devDependencies": {
-    "@swc/cli": "^0.1.55",
-    "@swc/core": "^1.2.139",
-    "@types/node": "^17.0.17",
-    "@typescript-eslint/eslint-plugin": "^5.11.0",
-    "@typescript-eslint/parser": "^5.11.0",
-    "chokidar": "^3.5.3",
-    "concurrently": "^6.5.1",
-    "eslint": "^8.9.0",
-    "eslint-config-prettier": "^8.3.0",
-    "nodemon": "^2.0.15",
-    "prettier": "^2.5.1",
-    "typescript": "^4.5.5"
+    "@swc/cli": "^0.1.57",
+    "@swc/core": "^1.2.176",
+    "@types/node": "^17.0.31",
+    "@typescript-eslint/eslint-plugin": "^5.22.0",
+    "@typescript-eslint/parser": "^5.22.0",
+    "concurrently": "^7.1.0",
+    "eslint": "^8.14.0",
+    "eslint-config-prettier": "^8.5.0",
+    "nodemon": "^2.0.16",
+    "prettier": "^2.6.2",
+    "typescript": "^4.6.4"
   },
   "engines": {
     "node": ">= 16.6.0"

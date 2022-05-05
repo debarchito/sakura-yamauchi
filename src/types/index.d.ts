@@ -9,216 +9,221 @@ import type {
 import type Realm from "realm";
 
 /**
- * Main bot namespace
+ * @description The main bot namespace which only includes things related to the initialization of the bot
  */
 export namespace Sakura {
   /**
-   * An extended version of Discord.Client
+   * @description An extended version of Discord.Client
    */
   export interface Client extends DiscordClient {
     /**
-     * Collection of all commands
+     * @description Collection of all commands that are loaded on boot
      */
     commands?: Collection<string, Command.Init>;
     /**
-     * Collection of all command categories
+     * @description Map of all command categories that are loaded on boot
      */
     categories?: Map<string, string>;
     /**
-     * Collection of guild IDs that interacted with the bot after the last restart
+     * @description Map of all server/guild IDs that interacted with the bot after boot
      */
     servers?: Map<string, Sakura.Server>;
   }
 
   /**
-   * In-memory representation of guild details
+   * @description In-memory representation of server/guild config to reduce the amount of database queries/sec (DMs are not handled as the default global config is used)
    */
   export interface Server {
     /**
-     * ID of the guild
+     * @description ID of the server/guild
      */
     id: string;
     /**
-     * Registered prefix of the guild
+     * @description Registered prefix of the server/guild
      */
     prefix: string;
     /**
-     * Registered embed color of the guild
+     * @description Registered embed color of the server/guild
      */
     color: ColorResolvable;
   }
 }
 
 /**
- * Main command interface
+ * @description The main command interface which only includes things related to the command system
  */
 export namespace Command {
   /**
-   * Command initialization
+   * @description Initialize this command
    */
   export interface Init {
     /**
-     * Name of the command (filename by default)
+     * @description Name of this command (filename by default)
      */
     name?: string;
     /**
-     * Aliases for the default command name
+     * @description Aliases for the default command name
      */
     alias?: string[];
     /**
-     * Should the command be accessible in DM? (true by default)
+     * @description Should this command be accessible in DM? (true by default)
      */
     dm?: boolean;
     /**
-     * Description of the command (to be used in help message)
+     * @description Description of this command (to be used in help message)
      */
     description: string;
     /**
-     * Describe the usage of the command (to be used in help message)
+     * @description Describe the usage of the command or simply referred as examples (to be used in help message)
      */
     usage: string;
     /**
-     * Permissions required to use the command
+     * @description Permissions required by the user to use this command
      */
     permissions?: Array<PermissionResolvable>;
     /**
-     * Execute the command
+     * @description Function to call when this command in invoked
      */
     execute(args: Command.Execute): Promise<void>;
   }
 
   /**
-   * Available options under the execute function
+   * @description Available options under the Command.Init.execute function
    */
   export interface Execute {
     /**
-     * Message instance
+     * @description The message instance
      */
     msg: Message;
     /**
-     * An extended version of Discord.Client
+     * @description An extended version of Discord.Client
      */
     client: Sakura.Client;
     /**
-     * Name of the command
+     * @description Name of this command
      */
     cmd: string;
     /**
-     * Arguments received by the command
+     * @description Arguments received by this command
      */
     args: string[];
     /**
-     * Main database instance
+     * @description The main database instance
      */
     realm: Realm;
     /**
-     * Collection of commonly used function
+     * @description Collection of commonly used functions
      */
     share: Share;
   }
 }
 
 /**
- * Main event namespace
+ * @description The main event namespace that only includes things related to the event system
  */
 export namespace Event {
   /**
-   * Event initialization
+   * @description Initialize this event
    */
   export interface Init {
     /**
-     * Name of the event
+     * @description Name of this event (filename by default)
      */
     name?: keyof ClientEvents;
     /**
-     * Methods / functions available under Discord.Client (which will be called)
+     * @description Methods / functions available under Discord.Client
+     * @example ```js
+     * client.on(...) -> "on"
+     * client.once(...) -> "once"
+     * ```
      */
     method?: keyof DiscordClient;
     /**
-     * Listen to the event
+     * @description Function to run when this event is invoked
      */
     listen(args: Event.Listen): (...args: any) => Promise<void>;
   }
 
   /**
-   * Interface for events loaded
+   * @description Available options under `eventLoader` function in `$PROJECT/src/handlers/eventHandler.ts`
+   * @info This interface is defined in `$types` because the `Event.Listen` interface extends this
    */
   export interface Loader {
     /**
-     * An extended version of Discord.Client
+     * @description An extended version of Discord.Client
      */
     client: Sakura.Client;
     /**
-     * Main database instance
+     * @description The main database instance
      */
     realm: Realm;
   }
 
   /**
-   * Available options under the listen function
+   * @description Available options under the `Event.Init.listen` function
    */
   export interface Listen extends Loader {
     /**
-     * Collection of commonly used functions
+     * @description Collection of commonly used functions
      */
     share: Share;
   }
 }
 
 /**
- * Main experience (xp) namespace
- * @info This namespace is subject to change
+ * @description Main experience (xp) namespace
+ * @warning This namespace is subject to change
  */
 export namespace XP {
   /**
-   * Experience initialization
+   * @description Initialize the experience system (database backed)
    */
   export interface Init {
     /**
-     * ID of the guild
+     * @description ID of the server/guild
      */
     guildId: string;
     /**
-     * ID of the user
+     * @description ID of the user
      */
     id: string;
     /**
-     * Experience points accumulated after the last level-up
+     * @description Experience points accumulated after the last level-up
      */
     xp: number;
     /**
-     * Level of the user
+     * @description Level of the user
      */
     level: number;
     /**
-     * Required experience points to level-up
+     * @description Required experience points to level-up
      */
     requiredXp: number;
     /**
-     * Total experience accumulated since level 0
+     * @description Total experience accumulated since level 0
      */
     totalXp: number;
   }
 }
 
 /**
- * Collection of commonly used functions
+ * @description Collection of commonly used functions
  */
 export interface Share {
   /**
-   * Returns a random number between min and max (inclusive)
+   * @description Returns a random number between min and max (inclusive)
    */
   random(min: number, max: number): number;
   /**
-   * Returns an random argument from an array of received arguments
+   * @description Returns a random argument from an array of received arguments
    */
   choose<T>(...args: T[]): T;
   /**
-   * Returns the prefix registered for a given guild or returns default prefix
+   * @description Returns the prefix registered for a given guild or returns default prefix
    */
   prefix(msg: Message, client: Sakura.Client): string;
   /**
-   * Returns the color registered for a given guild or returns default color
+   * @description Returns the color registered for a given guild or returns default color
    */
   color(msg: Message, client: Sakura.Client): ColorResolvable;
 }

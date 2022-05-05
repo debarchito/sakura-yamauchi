@@ -1,7 +1,7 @@
 import Realm from "realm";
 
 /**
- * Guild registration schema
+ * @description Guild registration schema
  */
 const guild: Realm.ObjectSchema = {
   name: "guild",
@@ -13,7 +13,7 @@ const guild: Realm.ObjectSchema = {
 };
 
 /**
- * User experience schema
+ * @description User experience schema
  */
 const xp: Realm.ObjectSchema = {
   name: "xp",
@@ -28,7 +28,7 @@ const xp: Realm.ObjectSchema = {
 };
 
 /**
- * Main database instance
+ * @description Main database instance
  */
 const realm = await Realm.open({
   schema: [guild, xp]

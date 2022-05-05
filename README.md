@@ -12,7 +12,7 @@ Under development.
 
 ## Want to contribute?
 
-Contributions are always welcomed! Just take a moment to go through the [STYLEGUIDE.md](/STYLEGUIDE.md) for this project.
+Contributions are always welcomed! You can always rely on prettier and eslint to make sure your code standardized and well-formatted.
 
 ## LICENSE
 

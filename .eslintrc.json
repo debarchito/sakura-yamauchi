@@ -11,8 +11,11 @@
     "ecmaVersion": 2022
   },
   "rules": {
+    "curly": "error",
+    "no-var": "error",
+    "no-self-compare": "error",
+    "no-unreachable": "error",
     "@typescript-eslint/no-non-null-assertion": "off",
-    "@typescript-eslint/no-explicit-any": "off",
-    "@typescript-eslint/explicit-module-boundary-types": "off"
+    "@typescript-eslint/no-explicit-any": "off"
   }
 }

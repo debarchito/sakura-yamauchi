@@ -1,20 +1,20 @@
 import type { Command } from "$types";
-import type { User, ColorResolvable } from "discord.js";
 
 const command: Command.Init = {
   alias: ["av"],
+  dm: false,
   description: "Get the avatar of an user!",
-  usage: "```{prefix}avatar <@User | :author>```",
-  async execute({ msg, client }) {
-    const user: User = msg.mentions.users.first() || msg.author;
-    const member = await msg.guild!.members.fetch(user);
-    await msg.reply({
+  usage: "```{prefix}avatar <@User> [Defaults to author]```",
+  async execute({ msg, client, share: { color } }) {
+    const user = msg.mentions.users.first() || msg.author,
+      member = await msg.guild!.members.fetch(user);
+
+    msg.reply({
       embeds: [
         {
-          color: client.servers!.get(msg.guild!.id)!.color as ColorResolvable,
+          color: color(msg, client),
           author: {
-            name: `${member.user.tag}${member.nickname ? ` | ${member.nickname}` : ""}`,
-            icon_url: member.user.displayAvatarURL()
+            name: `${member.user.tag}${member.nickname ? ` | ${member.nickname}` : ""}`
           },
           title: "Direct link",
           description: `[Click here](${member.user.displayAvatarURL({

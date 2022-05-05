@@ -5,8 +5,8 @@ const command: Command.Init = {
   description: "Flip a coin!",
   usage: "```{prefix}coin```",
   async execute({ msg, share: { choose } }) {
-    await msg.reply({
-      content: `:coin: ${choose<string>("Heads", "Tails")}`
+    msg.reply({
+      content: `:coin: ${choose<string>("Heads", "Tails")}.`
     });
   }
 };

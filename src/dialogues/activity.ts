@@ -20,7 +20,7 @@ interface Activity {
 }
 
 /**
- * Array of activities
+ * @description List of activities to display every `n` seconds
  */
 const activity: Activity[] = [
   { id: 3, value: "the world smile!" },

@@ -3,9 +3,8 @@ import type { Command } from "$types";
 const command: Command.Init = {
   description: "Get the latency!",
   usage: "```{prefix}ping```",
-  dm: true,
   async execute({ msg, client, share: { color } }) {
-    await msg.reply({
+    msg.reply({
       embeds: [
         {
           color: color(msg, client),
@@ -27,8 +26,8 @@ const command: Command.Init = {
             }
           ],
           footer: {
-            text: `${client.user!.username} (c) Debarchito`,
-            icon_url: client.user!.displayAvatarURL()
+            text: `Requested by ${msg.author.tag}`,
+            icon_url: msg!.author.displayAvatarURL()
           }
         }
       ]

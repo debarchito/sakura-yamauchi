@@ -7,7 +7,10 @@ import type { Message, ColorResolvable } from "discord.js";
 const event: Event.Init = {
   listen({ client, realm }) {
     return async function (msg: Message) {
-      if (msg.author.bot) return;
+      if (msg.author.bot) {
+        return;
+      }
+
       if (msg.channel.type !== "DM") {
         await xpHandler(msg);
 
@@ -32,6 +35,7 @@ const event: Event.Init = {
           }
         }
       }
+
       await commandHandler({ client, realm, msg });
     };
   }

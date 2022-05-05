@@ -5,8 +5,8 @@ const command: Command.Init = {
   description: "Rolls a dice!",
   usage: "```{prefix}dice```",
   async execute({ msg, share: { random } }) {
-    await msg.reply({
-      content: `:game_die: ${random(1, 6)}`
+    msg.reply({
+      content: `:game_die: ${random(1, 6)}.`
     });
   }
 };

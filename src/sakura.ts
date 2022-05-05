@@ -11,6 +11,10 @@ dotenv.config({
   path: resolve(resolve(), "../.env")
 });
 
+if (process.env.MAINTENANCE === "on") {
+  process.env.TOKEN = process.env.TEST_TOKEN;
+}
+
 const client: Sakura.Client = new Client({
   partials: ["CHANNEL"],
   intents: [
@@ -28,8 +32,8 @@ client.commands = new Collection();
 client.categories = new Map();
 client.servers = new Map();
 
-await commandLoader(client);
-await eventLoader({
+commandLoader(client);
+eventLoader({
   client,
   realm
 });

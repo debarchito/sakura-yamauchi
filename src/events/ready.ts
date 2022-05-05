@@ -2,7 +2,7 @@ import activity from "../dialogues/activity.js";
 import type { Event } from "$types";
 
 const event: Event.Init = {
-  method: "once", // Used "once" instead of "on" (default) as this channel is only used once
+  method: "once",
   listen({ client, share: { random } }) {
     return async function () {
       client.user!.setActivity(activity[0].value, {

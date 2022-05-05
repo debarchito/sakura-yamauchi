@@ -1,4 +1,4 @@
-import { existsSync, readdirSync, readFileSync } from "fs";
+import { existsSync, readdirSync } from "fs";
 import { resolve } from "path";
 import { type } from "os";
 import messageHandler from "./messageHandler.js";
@@ -8,16 +8,16 @@ import type { Message } from "discord.js";
 import type Realm from "realm";
 
 /**
- * Loads all the command files from the commands folder and categorizes them
+ * @description Loads all the command files from the commands folder and categorizes them
  */
-export async function commandLoader(client: Sakura.Client): Promise<void> {
+export async function commandLoader(client: Sakura.Client) {
   const commandsDir = readdirSync("./commands");
 
   for (const folder of commandsDir) {
     const commands = readdirSync(`./commands/${folder}`).filter(
         // .i.js stands for "ignore js"
         // Test files that are not supposed to run during production should end with .i.js or .i.ts in src files
-        file => file.endsWith(".js") && !file.endsWith(".i.js")
+        (file) => file.endsWith(".js") && !file.endsWith(".i.js")
       ),
       optionsJson = resolve(resolve(), `./commands/${folder}/options.i.js`),
       // Default category options; folder name is the default category name (capitalized first letter)
@@ -29,7 +29,9 @@ export async function commandLoader(client: Sakura.Client): Promise<void> {
 
     if (existsSync(optionsJson)) {
       // Over-write the default category options if provided
-      const { default: optionsConfig }: { default: typeof options } = await import(type() === "Windows_NT" ? `file://${optionsJson}` : optionsJson);
+      const { default: optionsConfig }: { default: typeof options } = await import(
+        type() === "Windows_NT" ? `file://${optionsJson}` : optionsJson
+      );
       Object.assign(options, optionsConfig);
     }
 
@@ -45,13 +47,18 @@ export async function commandLoader(client: Sakura.Client): Promise<void> {
 
     for (const file of commands) {
       const src = resolve(resolve(), `./commands/${folder}/${file}`),
-        { default: command }: { default: Command.Init } = await import(type() === "Windows_NT" ? `file://${src}` : src);
+        { default: command }: { default: Command.Init } = await import(
+          type() === "Windows_NT" ? `file://${src}` : src
+        );
 
       // Filename is the default command name
       command.name = command.name ? command.name : file.slice(0, -3).toLowerCase();
       const categories = client.categories!.get(options.category)!;
       // Append new `quoted command name` to category string separated by comma
-      client.categories!.set(options.category, categories.length === 0 ? `\`${command.name}\`` : `${categories}, \`${command.name}\``);
+      client.categories!.set(
+        options.category,
+        categories.length === 0 ? `\`${command.name}\`` : `${categories}, \`${command.name}\``
+      );
       // Load command in memory
       client.commands!.set(command.name, command);
     }
@@ -65,28 +72,30 @@ interface CommandHandler {
 }
 
 /**
- * Handles the incoming message and splits them into name and arguments
+ * @description Handles the incoming message and splits them into name and arguments
  */
-export async function commandHandler({ msg, client, realm }: CommandHandler): Promise<void> {
-  if (msg.author.bot) return;
+export async function commandHandler({ msg, client, realm }: CommandHandler) {
+  if (msg.author.bot) {
+    return;
+  }
 
   const content = msg.content.trim(),
     // We don't need the whole string here, in-case a user sends a very large text
     // We just need the first few characters to check if it's the prefix or the bot id
-    check = content.substring(0, 20).toLowerCase(),
+    check = content.substring(0, 30).toLowerCase(),
     // Check for prefix in guilds only; use default prefix for DMs
     prefix = msg.guild ? client.servers!.get(msg.guild.id)!.prefix : process.env.PREFIX!,
     // "!" is optional as it is only required when the user has a nickname
-    regex = RegExp(`^(<@!?${client.user!.id}>)`),
+    regex = RegExp(`^<@!?${client.user!.id}>`),
     test = regex.test(check);
 
   if (check.startsWith(prefix) || test) {
     let message: string[];
 
     if (!test) {
-      message = content.slice(prefix.length).trim().split(/ +/);
+      message = content.slice(prefix.length).trim().split(/\s+/);
     } else {
-      message = content.slice(check.match(regex)![0].length).trim().split(/ +/);
+      message = content.slice(check.match(regex)![0].length).trim().split(/\s+/);
     }
 
     const [cmd, ...args] = message;
