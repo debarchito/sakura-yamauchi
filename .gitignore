@@ -1,0 +1,7 @@
+.vscode/**
+!.vscode/tasks.json
+.env
+.env.*
+!.env.example
+.DS_Store
+.config/

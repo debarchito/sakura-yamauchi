@@ -1,0 +1,12 @@
+{
+  "importMap": "import_map.json",
+  "fmt": {
+    "options": {
+      "lineWidth": 100
+    }
+  },
+  "tasks": {
+    "run": "deno run --allow-read --allow-net sakura.ts",
+    "dev": "deno run --allow-read --allow-net --watch sakura.ts"
+  }
+}
