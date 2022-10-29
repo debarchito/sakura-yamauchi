@@ -50,16 +50,17 @@ loadables/
 ```
 
 `commands` end with just `.ts` while `extensions` end with `.e.ts`. `.i.ts` can be added to either
-`commands` or `extensions` to ignore them during loading. Directories like `utils` or
-`music` are treated as categories. They are used to categorize the commands for the `help` command.
-Again, there is a special `options.json` file with only two properties: `category` and
-`categoryEmoji`. By default if `options.json` doesn't exist, the capitalized name of the directory
-is considered the category name while categoryEmoji is empty. We can define the values in
-`options.json` to overwrite the behaviour for that specific category.
+`commands` or `extensions` to ignore them during loading. Directories like `utils` or `music` are
+treated as categories. They are used to categorize the commands for the `help` command. Again, there
+is a special `options.json` file with only two properties: `category` and `categoryEmoji`. By
+default if `options.json` doesn't exist, the capitalized name of the directory is considered the
+category name while categoryEmoji is empty. We can define the values in `options.json` to overwrite
+the behaviour for that specific category.
 
 #### Add commands
 
-At this point it is better to be familiar with how [harmony](https://deno.land/x/harmony) works. Although the type definitions are really good. You can explore those. Anyway an example:
+At this point it is better to be familiar with how [harmony](https://deno.land/x/harmony) works.
+Although the type definitions are really good. You can explore those. Anyway an example:
 
 ```ts
 // name.ts
@@ -68,16 +69,15 @@ import { Command } from "harmony/mod.ts";
 import { category as cat } from "@/components/share.ts";
 import type { CommandContext } from "harmony/mod.ts";
 
-export default class <Name> extends Command {
+export default class<Name> extends Command {
   name = "<name>";
   description = "...";
   // explore more options from type definitions
   // but...this one is a bit special
-  // use this category (cat) function and leave the rest to Deno! Categorization is automagic! 
+  // use this category (cat) function and leave the rest to Deno! Categorization is automagic!
   // This will respect the structure of the directory and options.json
   // (you can always check the source)
   category = cat(import.meta.url);
-
 
   execute(ctx: CommandContext) {
     // again, explore harmonyland!
@@ -109,7 +109,8 @@ export default class <Name> extends Extension {
 }
 ```
 
-Well that is about it (for now). Btw, Deno is cool! Much better than Node....shots fired? :P...Oh yeah...
+Well that is about it (for now). Btw, Deno is cool! Much better than Node....shots fired? :P...Oh
+yeah...
 
 ### [LICENSE]
 
