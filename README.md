@@ -94,7 +94,7 @@ import type { CommandClient } from "harmony/mod.ts";
 
 class <Command1> extends Command { /* ... */ }
 
-class <Command2> extends Command { /* ...*/ }
+class <Command2> extends Command { /* ... */ }
 
 export default class <Name> extends Extension {
   name = "<name>"

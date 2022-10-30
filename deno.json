@@ -6,7 +6,7 @@
     }
   },
   "tasks": {
-    "run": "deno run --allow-read --allow-net sakura.ts",
-    "dev": "deno run --allow-read --allow-net --watch sakura.ts"
+    "run": "deno run --allow-read --allow-env --allow-net sakura.ts",
+    "dev": "deno run --allow-read --allow-env --allow-net --watch sakura.ts"
   }
 }

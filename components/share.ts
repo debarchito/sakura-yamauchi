@@ -11,7 +11,7 @@ export function random(min: number, max: number) {
 export function category(url: string): string {
   const category_url = url.substring(0, url.lastIndexOf("/")),
     parts = category_url.split("/"),
-    category_name = category_url.split("/")[parts.length - 1],
+    category_name = parts[parts.length - 1],
     options_json_url = `${category_url.replace("file:///", "")}/options.json`,
     // Default options
     options = {

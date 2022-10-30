@@ -1,7 +1,6 @@
 //! INCOMPLETE COMMAND!
 
 import { Command } from "harmony/mod.ts";
-import { env } from "@/components/env.ts";
 import type { CommandContext, EmbedPayload } from "harmony/mod.ts";
 
 export default class Help extends Command {
@@ -20,7 +19,7 @@ export default class Help extends Command {
         },
         description:
           `"Right now, I, as formed as such, am living in this moment, I am living through our choices, right now, right here, you, and me as well, are living."`,
-        color: Number(env().COLOR),
+        color: Number(Deno.env.get("COLOR")),
         fields: [],
         thumbnail: {
           url: ctx.client.user?.avatarURL(),
@@ -31,7 +30,7 @@ export default class Help extends Command {
         },
       };
 
-      ctx.message.reply({
+      ctx.channel.send({
         embeds: [embed],
       }, {
         allowedMentions: {
