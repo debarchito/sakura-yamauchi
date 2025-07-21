@@ -1,4 +1,6 @@
 .vscode/**
+/target
+/.direnv
 !.vscode/tasks.json
 .env
 .env.*
