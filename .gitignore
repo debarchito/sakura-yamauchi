@@ -1,9 +1,12 @@
-.vscode/**
-/target
-/.direnv
+/.vscode
 !.vscode/tasks.json
+
+/.direnv
+/.DS_Store
+
+/target
+/result
+
 .env
 .env.*
 !.env.example
-.DS_Store
-.config/

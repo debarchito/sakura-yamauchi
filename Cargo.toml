@@ -1,0 +1,11 @@
+[package]
+name = "sakura-yamauchi"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+anyhow = "1"
+poise = "0.6"
+tokio = { version = "1", features = ["rt-multi-thread"] }
+tracing = "0.1"
+tracing-subscriber = "0.3"
