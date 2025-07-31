@@ -1,0 +1,16 @@
+[package]
+name = "sakuya"
+version = "0.1.0"
+description = "A rogue-like metroidvania game in the making!"
+edition = "2024"
+license-file = "LICENSE"
+readme = "README.md"
+
+[dependencies]
+bevy = { version = "0.16", features = ["wayland"] }
+
+[profile.dev]
+opt-level = 1
+
+[profile.dev.package."*"]
+opt-level = 3
