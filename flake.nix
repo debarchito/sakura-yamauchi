@@ -43,7 +43,6 @@
               nativeBuildInputs = [
                 pkgs.bacon
                 pkgs.mold
-                pkgs.nix-output-monitor
                 pkgs.pkg-config
               ];
               xorgBuildInputs = [
